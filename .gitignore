@@ -1,2 +1,3 @@
 creds/credentials.json
 .idea/
+__pycache__/
