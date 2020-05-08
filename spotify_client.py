@@ -79,12 +79,13 @@ class SpotifyClient(object):
         json = response.json()
         results = json['items']
         return results
-    def get_playlist_items(self, playlist_id):
+    def get_playlist_items(self, playlist_id, offset):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = requests.get(
             url,
             params={
-                "limit": 50
+                "limit": 50,
+                "offset": offset
             },
             headers={
                 "Authorization": f"Bearer {self.api_token}"

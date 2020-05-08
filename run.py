@@ -1,6 +1,6 @@
 import json
 from spotify_client import SpotifyClient
-
+#TODO: Think about using CMD2 if wanting to go with command line interface, could work with gui
 
 def run():
     #Load Credentials
@@ -33,7 +33,7 @@ def run():
     playlistId = list[int(playlistNum)-1]
 
 
-    playlist = spotify_client.get_playlist_items(playlistId['id'])
+    playlist = spotify_client.get_playlist_items(playlistId['id'],0)
     for num,song in enumerate(playlist, start=1):
         print(f"{num}.\t{song.name}")
 
