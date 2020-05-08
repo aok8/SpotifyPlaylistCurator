@@ -1,6 +1,7 @@
 import requests
 import urllib.parse
 
+
 class Song(object):
     def __init__(self, name, albumName, artists, song_id, uri):
         self.name = name
@@ -8,6 +9,7 @@ class Song(object):
         self.artistss = artists
         self.song_id = song_id
         self.uri = uri
+
 
 class SpotifyClient(object):
     def __init__(self, api_token):
@@ -23,6 +25,7 @@ class SpotifyClient(object):
         )
         json = response.json()
         return json
+
     def search_song(self, artist, track):
         query = urllib.parse.quote(f'{artist} {track}')
         url = f"https://api.spotify.com/v1/search?q={query}&type=track"
@@ -30,7 +33,7 @@ class SpotifyClient(object):
             url,
             headers={
                 "Content-Type": "application/json",
-                "Authorization" : f"Bearer {self.api_token}"
+                "Authorization": f"Bearer {self.api_token}"
             }
         )
         response_json = response.json()
@@ -66,7 +69,7 @@ class SpotifyClient(object):
         response = requests.post(
             url,
             json={
-                "uris" : [uri]
+                "uris": [uri]
             },
             headers={
                 "Content-Type": "application/json",
@@ -87,6 +90,7 @@ class SpotifyClient(object):
         json = response.json()
         results = json['items']
         return results
+
     def get_playlist_items(self, playlist_id, offset):
         url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = requests.get(
@@ -108,7 +112,8 @@ class SpotifyClient(object):
                 Song(track['name'], track['id'], track['uri'])
             )
         return songList
-    #give list
+
+    # give list
     def get_song_recommendations(self, song_id):
         url = f"https://api.spotify.com/v1/recommendations"
         response = requests.get(
@@ -128,3 +133,21 @@ class SpotifyClient(object):
                 Song(track['name'], track['id'], track['uri'])
             )
         return songList
+    def getDevices(self):
+        url = "https://api.spotify.com/v1/me/player/play"
+        response = requests.get(
+            url,
+            headers={
+                "Authorization": f"Bearer {self.api_token}"
+            }
+        )
+        return response['devices']
+    def startPlayback(self):
+        url = "https://api.spotify.com/v1/me/player/play"
+        response = requests.put(
+            url,
+            headers={
+                "Authorization": f"Bearer {self.api_token}"
+            }
+        )
+        return response.ok
