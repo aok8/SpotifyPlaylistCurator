@@ -2,9 +2,11 @@ import requests
 import urllib.parse
 
 class Song(object):
-    def __init__(self, name, song_id, uri):
+    def __init__(self, name, albumName, artists, song_id, uri):
         self.name = name
-        self.song_id = song_id;
+        self.albumName = albumName
+        self.artistss = artists
+        self.song_id = song_id
         self.uri = uri
 
 class SpotifyClient(object):
@@ -34,7 +36,13 @@ class SpotifyClient(object):
         response_json = response.json()
         results = response_json['tracks']['items']
         if results:
-            song = Song(results[0]['name'],results[0]['id'], results[0]['uri'])
+            song = Song(
+                results[0]['name'],
+                results[0]['album']['name'],
+                results[0]['artists'],
+                results[0]['id'],
+                results[0]['uri']
+            )
             return song
         else:
             raise Exception(f"No song found for {artist} = {track}")
