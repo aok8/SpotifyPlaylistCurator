@@ -36,6 +36,12 @@ def run():
     playlist = spotify_client.get_playlist_items(playlistId['id'],0)
     for num,song in enumerate(playlist, start=1):
         print(f"{num}.\t{song.name}")
+    songNum = input("Select Song:\n")
+    songNum = int(songNum)-1
+    songRecs = spotify_client.get_song_recommendations([playlist[songNum].song_id])
+    for num,song in enumerate(songRecs, start=1):
+        print(f"{num}.\t{song.name}")
+
 
 
     # # search for songs

@@ -100,3 +100,23 @@ class SpotifyClient(object):
                 Song(track['name'], track['id'], track['uri'])
             )
         return songList
+    #give list
+    def get_song_recommendations(self, song_id):
+        url = f"https://api.spotify.com/v1/recommendations"
+        response = requests.get(
+            url,
+            params={
+                "seed_tracks": song_id
+            },
+            headers={
+                "Authorization": f"Bearer {self.api_token}"
+            }
+        )
+        json = response.json()
+        results = json['tracks']
+        songList = []
+        for track in results:
+            songList.append(
+                Song(track['name'], track['id'], track['uri'])
+            )
+        return songList
