@@ -1,6 +1,11 @@
 import requests
 import urllib.parse
 
+class Song(object):
+    def __init__(self, song_id, uri):
+        self.song_id = song_id;
+        self.uri = uri
+
 class SpotifyClient(object):
     def __init__(self, api_token):
         self.api_token = api_token
@@ -28,7 +33,8 @@ class SpotifyClient(object):
         response_json = response.json()
         results = response_json['tracks']['items']
         if results:
-            return results[0]['id']
+            song = Song(results[0]['id'], results[0]['uri'])
+            return song
         else:
             raise Exception(f"No song found for {artist} = {track}")
 
@@ -46,8 +52,20 @@ class SpotifyClient(object):
         )
         return response.ok
 
-    def add_song_to_playlist(self, song_id, playlist_id):
-        pass
+    def add_song_to_playlist(self, uri, playlist_id):
+        url = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
+        response = requests.post(
+            url,
+            json={
+                "uris" : [uri]
+            },
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f"Bearer {self.api_token}"
+
+            }
+        )
+        return response.ok
 
     def get_playlists(self):
         url = "https://api.spotify.com/v1/me/playlists"
