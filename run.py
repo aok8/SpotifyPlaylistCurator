@@ -11,37 +11,40 @@ def run():
 
     # user = spotify_client.get_user_profile()
     # show playlists
-    spotify_client.getDevices()
-    # list = spotify_client.get_playlists()
-    # print("Playlists:\n")
-    # for num, playlist in enumerate(list, start = 1):
-    #     print(f"{num}.\t{playlist['name']}")
-    #
-    # # have user select a playlist
-    # while(True):
-    #     #TODO: Create Static Message
-    #     playlistNum = input("Input playlist number:\n")
-    #     if(checkInteger(playlistNum)):
-    #         num = int(playlistNum)
-    #         if((num<=0).__or__(num>len(list)) ):
-    #             #TODO: Create Static Message
-    #             print("Please input a valid number.")
-    #         else:
-    #             break
-    #     else:
-    #         #TODO: Create Static Message
-    #         print("Please input a valid number.")
-    # playlistId = list[int(playlistNum)-1]
-    #
-    #
-    # playlist = spotify_client.get_playlist_items(playlistId['id'],0)
-    # for num,song in enumerate(playlist, start=1):
-    #     print(f"{num}.\t{song.name}")
-    # songNum = input("Select Song:\n")
-    # songNum = int(songNum)-1
-    # songRecs = spotify_client.get_song_recommendations([playlist[songNum].song_id])
-    # for num,song in enumerate(songRecs, start=1):
-    #     print(f"{num}.\t{song.name}")
+
+    list = spotify_client.get_playlists()
+    print("Playlists:\n")
+    for num, playlist in enumerate(list, start = 1):
+        print(f"{num}.\t{playlist['name']}")
+
+    # have user select a playlist
+    while(True):
+        #TODO: Create Static Message
+        playlistNum = input("Input playlist number:\n")
+        if(checkInteger(playlistNum)):
+            num = int(playlistNum)
+            if((num<=0).__or__(num>len(list)) ):
+                #TODO: Create Static Message
+                print("Please input a valid number.")
+            else:
+                break
+        else:
+            #TODO: Create Static Message
+            print("Please input a valid number.")
+    playlistId = list[int(playlistNum)-1]
+
+
+    playlist = spotify_client.get_playlist_items(playlistId['id'],0)
+    for num,song in enumerate(playlist, start=1):
+        print(f"{num}.\t{song.name}")
+    songNum = input("Select Song:\n")
+    songNum = int(songNum)-1
+    songRecs = spotify_client.get_song_recommendations([playlist[songNum].song_id])
+    for num,song in enumerate(songRecs, start=1):
+        print(f"{num}.\t{song.name}")
+    recNum = input("Select Song:\n")
+    recNum = int(recNum)-1
+    spotify_client.add_to_queue(songRecs[recNum].uri)
 
 
 

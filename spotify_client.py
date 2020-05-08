@@ -109,7 +109,13 @@ class SpotifyClient(object):
         for item in results:
             track = item['track']
             songList.append(
-                Song(track['name'], track['id'], track['uri'])
+                Song(
+                    track['name'],
+                    track['album']['name'],
+                    track['artists'],
+                    track['id'],
+                    track['uri']
+                )
             )
         return songList
 
@@ -130,10 +136,16 @@ class SpotifyClient(object):
         songList = []
         for track in results:
             songList.append(
-                Song(track['name'], track['id'], track['uri'])
+                Song(
+                    track['name'],
+                    track['album']['name'],
+                    track['artists'],
+                    track['id'],
+                    track['uri']
+                )
             )
         return songList
-    def getDevices(self):
+    def get_devices(self):
         url = "https://api.spotify.com/v1/me/player/play"
         response = requests.get(
             url,
@@ -142,10 +154,23 @@ class SpotifyClient(object):
             }
         )
         return response['devices']
-    def startPlayback(self):
+    def start_playback(self):
         url = "https://api.spotify.com/v1/me/player/play"
         response = requests.put(
             url,
+            headers={
+                "Authorization": f"Bearer {self.api_token}"
+            }
+        )
+        return response.ok
+
+    def add_to_queue(self,uri):
+        url = f"https://api.spotify.com/v1/me/player/queue"
+        response = requests.post(
+            url,
+            params={
+                "uri": uri
+            },
             headers={
                 "Authorization": f"Bearer {self.api_token}"
             }
