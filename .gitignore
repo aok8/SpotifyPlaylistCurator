@@ -2,4 +2,4 @@
 **/.idea
 
 # config
-/creds/config.json
+creds/config.json
