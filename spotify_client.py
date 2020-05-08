@@ -5,6 +5,16 @@ class SpotifyClient(object):
     def __init__(self, api_token):
         self.api_token = api_token
 
+    def get_user_profile(self):
+        url = "https://api.spotify.com/v1/me/"
+        response = requests.get(
+            url,
+            headers={
+                "Authorization": f"Bearer {self.api_token}"
+            }
+        )
+        json = response.json()
+        return json
     def search_song(self, artist, track):
         query = urllib.parse.quote(f'{artist} {track}')
         url = f"https://api.spotify.com/v1/search?q={query}&type=track"
@@ -38,3 +48,15 @@ class SpotifyClient(object):
 
     def add_song_to_playlist(self, song_id, playlist_id):
         pass
+
+    def get_playlists(self):
+        url = "https://api.spotify.com/v1/me/playlists"
+        response = requests.get(
+            url,
+            headers={
+                "Authorization": f"Bearer {self.api_token}"
+            }
+        )
+        json = response.json()
+        results = json['items']
+        return results

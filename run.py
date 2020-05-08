@@ -8,6 +8,12 @@ def run():
     AUTHTOKEN = data["spotify"]["authToken"]
     spotify_client = SpotifyClient(AUTHTOKEN)
 
+    # show playlists
+    user = spotify_client.get_user_profile()
+    list = spotify_client.get_playlists()
+    print("Playlists:\n")
+    for num, playlist in enumerate(list, start = 1):
+        print(f"{num}.\t{playlist['name']}")
     # search for songs
     artist = input("Input artist name:\n")
     track = input("Input track name:\n")
