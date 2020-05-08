@@ -1,0 +1,5 @@
+# ignore pycharm idea files
+**/.idea
+
+# config
+config.json
