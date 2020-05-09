@@ -3,12 +3,18 @@ import urllib.parse
 
 
 class Song(object):
-    def __init__(self, name, albumName, artists, song_id, uri):
+    def __init__(self, name, album_name, artists, song_id, uri):
         self.name = name
-        self.albumName = albumName
-        self.artistss = artists
+        self.albumName = album_name
+        self.artists = artists
         self.song_id = song_id
         self.uri = uri
+
+
+def build_dictionary(keys, values):
+    res = {keys[i]: values[i] for i in range(len(keys))}
+    result = {k: v for k, v in res.items() if v is not None}
+    return result
 
 
 class SpotifyClient(object):
@@ -105,10 +111,10 @@ class SpotifyClient(object):
         )
         json = response.json()
         results = json['items']
-        songList = []
+        song_list = []
         for item in results:
             track = item['track']
-            songList.append(
+            song_list.append(
                 Song(
                     track['name'],
                     track['album']['name'],
@@ -117,25 +123,29 @@ class SpotifyClient(object):
                     track['uri']
                 )
             )
-        return songList
+        return song_list
 
     # give list
-    def get_song_recommendations(self, song_id):
+    def get_song_recommendations(self, seed_tracks, acousticness=None, danceability=None, energy=None,
+                                 instrumentalness=None, loudness=None, valence=None):
+        # create lists to be made into dictionary
+        keys = ["seed_tracks", "acousticness", "danceability", "energy", "instrumentalness", "loudness", "valence"]
+        values = [seed_tracks, acousticness, danceability, energy, instrumentalness, loudness, valence]
+        parameters = build_dictionary(keys, values)
+
         url = f"https://api.spotify.com/v1/recommendations"
         response = requests.get(
             url,
-            params={
-                "seed_tracks": song_id
-            },
+            params=parameters,
             headers={
                 "Authorization": f"Bearer {self.api_token}"
             }
         )
         json = response.json()
         results = json['tracks']
-        songList = []
+        song_list = []
         for track in results:
-            songList.append(
+            song_list.append(
                 Song(
                     track['name'],
                     track['album']['name'],
@@ -144,7 +154,8 @@ class SpotifyClient(object):
                     track['uri']
                 )
             )
-        return songList
+        return song_list
+
     def get_devices(self):
         url = "https://api.spotify.com/v1/me/player/play"
         response = requests.get(
@@ -154,6 +165,7 @@ class SpotifyClient(object):
             }
         )
         return response['devices']
+
     def start_playback(self):
         url = "https://api.spotify.com/v1/me/player/play"
         response = requests.put(
@@ -164,7 +176,7 @@ class SpotifyClient(object):
         )
         return response.ok
 
-    def add_to_queue(self,uri):
+    def add_to_queue(self, uri):
         url = f"https://api.spotify.com/v1/me/player/queue"
         response = requests.post(
             url,
