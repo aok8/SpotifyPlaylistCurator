@@ -2,7 +2,7 @@
 This project serves as a way to simplify creating and filling out playlists.
 ## Current Use Case
 For creating and filling out playlists, my personal method is to find a song I like or that represents the overall feel of the playlist, then look through the radio for that song and add songs to the playlist off of that radio. This is ideal, but could be improved on in both efficiency as well as features
-## FeatureList
+## Feature List
  - "Test" Out songs
 	 - Currently, users will use the song radio and play through it to find songs they like. This feature aims to give the user the choice of which songs to "test". Users will be able to select songs from the recommendation list and add them to the queue to play through.
  - Playback control
