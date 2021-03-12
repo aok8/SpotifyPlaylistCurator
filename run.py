@@ -12,9 +12,9 @@ def run():
     client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, USERNAME)
     # lst = client.search_song("Say so Doja Cat")
     # lst = client.get_playlists()
-    lst = client.get_songs_in_playlist("7cu6nfbH5LoaHe4Vq9fulq")
-    for i, song in enumerate(lst):
-        print("%4d %s" % (i + 1, song.name))
+    lst = client.get_values_of_playlist("7cu6nfbH5LoaHe4Vq9fulq")
+    for i, songInfo in enumerate(lst):
+        print("%4d %s\t %s" % (i + 1, songInfo.song.name, songInfo.danceability))
 
 # def options():
 #     print("Welcome to the Spotify Playlist Curator")

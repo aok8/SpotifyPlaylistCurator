@@ -72,6 +72,33 @@ class SpotifyClient(object):
             songList.append(Song(song['track']['name'], song['track']['album']['name'], song['track']['artists'], song['track']['id'], song['track']['uri']))
         return songList
 
+    def get_values_of_song(self, id):
+        features = self.sp.audio_features(id)
+        song = self.sp.track(id)
+        info = SongInfo(
+            Song(
+                song['name'],
+                song['album']['name'],
+                song['artists'],
+                song['id'],
+                song['uri'],
+            ),
+            features[0]['acousticness'],
+            features[0]['danceability'],
+            features[0]['energy'],
+            features[0]['instrumentalness'],
+            features[0]['liveness'],
+            features[0]['loudness'],
+            features[0]['valence'],
+        )
+        return info
+
+    def get_values_of_playlist(self, id, off =0):
+        valueList = []
+        songList = self.get_songs_in_playlist(id, off)
+        for song in songList:
+            valueList.append(self.get_values_of_song(song.song_id))
+        return valueList
         
 
     
