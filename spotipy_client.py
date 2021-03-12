@@ -7,15 +7,6 @@ scope = "user-library-read user-read-playback-position user-read-privateu ser-re
 
 redirect_uri = "https://localhost:8080"
 
-# client_credentials_manager = SpotifyClientCredentials(client_id=client_id, 
-#                                                       client_secret=client_secret)
-
-# auth_manager = SpotifyClientCredentials(client_id=client_id, 
-#                                                       client_secret=client_secret)
-
-# sp = spotipy.Spotify(auth_manager=auth_manager)
-
-
 class Song(object):
     def __init__(self, name, albumName, artists, song_id, uri):
         self.name = name
@@ -72,9 +63,20 @@ class SpotifyClient(object):
             songList.append(Song(song['track']['name'], song['track']['album']['name'], song['track']['artists'], song['track']['id'], song['track']['uri']))
         return songList
 
+    def get_song(self, id):
+        result = self.sp.track(id)
+        song = Song(
+                result['name'],
+                result['album']['name'],
+                result['artists'],
+                result['id'],
+                result['uri'],
+            )
+        return song
+
     def get_values_of_song(self, id):
         features = self.sp.audio_features(id)
-        song = self.sp.track(id)
+        song = self.get_song(id)
         info = SongInfo(
             Song(
                 song['name'],
@@ -99,7 +101,14 @@ class SpotifyClient(object):
         for song in songList:
             valueList.append(self.get_values_of_song(song.song_id))
         return valueList
-        
+    
+    def get_song_recommendations_no_values_single(self,id, limit = 50):
+        songList = self.sp.recommendations(seed_tracks = [id], limit = limit)
+        recommendations = []
+        for song in songList['tracks']:
+             recommendations.append(Song(song['name'], song['album']['name'], song['artists'], song['id'], song['uri']))
+        return recommendations
+
 
     
 
