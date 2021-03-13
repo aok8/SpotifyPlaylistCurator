@@ -12,13 +12,20 @@ def run():
     client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, USERNAME)
     # lst = client.search_song("Say so Doja Cat")
     # lst = client.get_playlists()
-    # lst = client.get_values_of_playlist("7cu6nfbH5LoaHe4Vq9fulq")
-    # for i, songInfo in enumerate(lst):
-    #     print("%4d %s\t %s" % (i + 1, songInfo.song.name, songInfo.danceability))
+    lst = client.get_values_of_playlist("4Xo28fWAbWbpsfefoFzZk1")
+    for i, songInfo in enumerate(lst):
+        print("%4d %s\t %s" % (i + 1, songInfo.song.name, songInfo.danceability))
 
-    lst = client.get_song_recommendations_no_values_single('3Dv1eDb0MEgF93GpLXlucZ')
-    for i, song in enumerate(lst):
-        print("%4d %s" %(i+1, song.name))
+    # song = client.get_values_of_song("4xalL1bGV2FoRgAVt62mti")
+    # print("%s %s %s %s %s %s %s" %(song.acousticness, song.danceability, song.energy, song.instrumentalness, song.liveness, song.loudness, song.valence))
+    # recList = client.get_song_recommendations_no_values_single("4xalL1bGV2FoRgAVt62mti")
+    # songList = []
+    # for rec in recList:
+    #     songList.append(rec.song_id)
+    # client.add_song_list_to_queue(songList)
+    # lst = client.get_song_recommendations_no_values_single('3Dv1eDb0MEgF93GpLXlucZ')
+    # for i, song in enumerate(lst):
+    #     print("%4d %s" %(i+1, song.name))
 
 # def options():
 #     print("Welcome to the Spotify Playlist Curator")

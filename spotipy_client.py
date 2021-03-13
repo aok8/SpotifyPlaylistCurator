@@ -3,7 +3,7 @@ import urllib.parse
 import spotipy
 from spotipy.oauth2 import SpotifyClientCredentials
 
-scope = "user-library-read user-read-playback-position user-read-privateu ser-read-email playlist-read-private user-library-modify user-top-read playlist-read-collaborative playlist-modify-public playlist-modify-private ugc-image-upload user-follow-read user-follow-modify user-read-playback-state user-modify-playback-state user-read-currently-playing user-read-recently-played"
+scope = "ugc-image-upload user-read-recently-played user-top-read user-read-playback-position user-read-playback-state user-modify-playback-state user-read-currently-playing app-remote-control streaming playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative user-follow-modify user-follow-read user-library-modify user-library-read user-read-email user-read-private"
 
 redirect_uri = "https://localhost:8080"
 
@@ -40,8 +40,8 @@ class SpotifyClient(object):
         self.usename = username
         auth_manager = SpotifyClientCredentials(client_id=self.client_id, 
                                                       client_secret=self.client_secret)
-        self.sp = spotipy.Spotify(auth_manager=auth_manager)
-    
+        # self.sp = spotipy.Spotify(auth_manager=auth_manager)
+        self.sp = spotipy.Spotify(auth_manager=spotipy.SpotifyOAuth(scope=scope, client_id =self.client_id, client_secret =self.client_secret, redirect_uri = 'https://localhost:8080'))
     def search_song(self,query,off=0):
         results = self.sp.search(query, limit=50,offset=off,type="track")
         songList = []
@@ -74,52 +74,42 @@ class SpotifyClient(object):
             )
         return song
 
-    def get_values_of_song(self, id):
-        features = self.sp.audio_features(id)
-        song = self.get_song(id)
-        info = SongInfo(
-            Song(
-                song['name'],
-                song['album']['name'],
-                song['artists'],
-                song['id'],
-                song['uri'],
-            ),
-            features[0]['acousticness'],
-            features[0]['danceability'],
-            features[0]['energy'],
-            features[0]['instrumentalness'],
-            features[0]['liveness'],
-            features[0]['loudness'],
-            features[0]['valence'],
-        )
+    def get_values_of_songs(self, song_list):
+        if not isinstance(song_list, list): song_list = [song_list]
+        id_list = []
+        for song in song_list:
+            id_list.append(song.song_id)
+        features = self.sp.audio_features(id_list)
+        info = []
+        for info_set, song in zip(features,song_list):
+            info.append(SongInfo(
+                song, 
+                info_set['acousticness'],
+                info_set['danceability'],
+                info_set['energy'],
+                info_set['instrumentalness'],
+                info_set['liveness'],
+                info_set['loudness'],
+                info_set['valence'],
+            ))
         return info
 
     def get_values_of_playlist(self, id, off =0):
-        valueList = []
-        songList = self.get_songs_in_playlist(id, off)
-        for song in songList:
-            valueList.append(self.get_values_of_song(song.song_id))
-        return valueList
+        song_list = self.get_songs_in_playlist(id, off)
+        value_list = self.get_values_of_songs(song_list)
+        return value_list
     
     def get_song_recommendations_no_values_single(self,id, limit = 50):
-        songList = self.sp.recommendations(seed_tracks = [id], limit = limit)
+        songList = self.sp.recommendations(seed_tracks = [id], limit = limit, target_danceability='0.7', target_energy='0.6',target_liveness='0.1')
         recommendations = []
         for song in songList['tracks']:
              recommendations.append(Song(song['name'], song['album']['name'], song['artists'], song['id'], song['uri']))
         return recommendations
 
+    def add_song_to_queue(self, id, device_id=None):
+        self.sp.add_to_queue(id,device_id)
 
+    def add_song_list_to_queue(self, id_list, device_id=None):
+        for song in id_list:
+            self.add_song_to_queue(song, device_id)
     
-
-
-
-
-# playlists = sp.user_playlists('aokouassi')
-# while playlists:
-#     for i, playlist in enumerate(playlists['items']):
-#         print("%4d %s %s" % (i + 1 + playlists['offset'], playlist['uri'],  playlist['name']))
-#     if playlists['next']:
-#         playlists = sp.next(playlists)
-#     else:
-#         playlists = None
