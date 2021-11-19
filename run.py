@@ -12,10 +12,12 @@ def run():
     client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, USERNAME)
     # lst = client.search_song("Say so Doja Cat")
     # lst = client.get_playlists()
-    lst = client.get_values_of_playlist("4Xo28fWAbWbpsfefoFzZk1")
+    lst = client.get_values_of_playlist("3ILUnuhvTWxStTN93fp06E")
+    # lst = client.get_playlists()
     for i, songInfo in enumerate(lst):
-        print("%4d %s\t %s" % (i + 1, songInfo.song.name, songInfo.danceability))
-
+        # print("%4d %s\t %s" % (i+1, songInfo.name, songInfo.id))
+        # print("%4d %s\t %s" % (i + 1, songInfo.song.name, songInfo.danceability))
+        print(client.song_to_string(songInfo, True, True, True, True, True, True, True))
     # song = client.get_values_of_song("4xalL1bGV2FoRgAVt62mti")
     # print("%s %s %s %s %s %s %s" %(song.acousticness, song.danceability, song.energy, song.instrumentalness, song.liveness, song.loudness, song.valence))
     # recList = client.get_song_recommendations_no_values_single("4xalL1bGV2FoRgAVt62mti")

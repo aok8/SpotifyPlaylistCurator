@@ -73,7 +73,23 @@ class SpotifyClient(object):
                 result['uri'],
             )
         return song
-
+    def song_to_string(self, songInfo, acoustic = False, dance = False, energy = False, instrumental = False, liveness = False, loudness = False, valence = False):
+        response = "Song Name: %s\n" %songInfo.song.name
+        if acoustic:
+            response = response + ("Acousticness: %s\n" %songInfo.acousticness)
+        if dance:
+            response = response + "Danceability: %s\n" %songInfo.danceability
+        if energy:
+            response = response + "Energy: %s\n" %songInfo.energy
+        if instrumental:
+            response = response + "Instrumentalness: %s\n" %songInfo.instrumentalness
+        if liveness:
+            response = response + "Liveness: %s\n" %songInfo.liveness
+        if loudness:
+            response = response + "Loudness: %s\n" %songInfo.loudness
+        if valence:
+            response = response + "Valence: %s\n" %songInfo.valence
+        return response
     def get_values_of_songs(self, song_list):
         if not isinstance(song_list, list): song_list = [song_list]
         id_list = []
