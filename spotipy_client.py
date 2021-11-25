@@ -114,12 +114,44 @@ class SpotifyClient(object):
         song_list = self.get_songs_in_playlist(id, off)
         value_list = self.get_values_of_songs(song_list)
         return value_list
-    
-    def get_song_recommendations_no_values_single(self,id, limit = 50):
-        songList = self.sp.recommendations(seed_tracks = [id], limit = limit, target_danceability='0.7', target_energy='0.6',target_liveness='0.1')
+
+    def get_song_recommendations(self, seed_artists = None, seed_genres  = None, seed_tracks = None, limit = 20, country = None, **kwargs):
+        params = dict(limit=limit)
+        if seed_artists:
+            params["seed_artists"] = seed_artists
+        if seed_genres:
+            params["seed_genres"] = seed_genres
+        if seed_tracks:
+            params["seed_tracks"] = seed_tracks
+        if country:
+            params["market"] = country
+
+        for attribute in [
+            "acousticness",
+            "danceability",
+            "duration_ms",
+            "energy",
+            "instrumentalness",
+            "key",
+            "liveness",
+            "loudness",
+            "mode",
+            "popularity",
+            "speechiness",
+            "tempo",
+            "time_signature",
+            "valence",
+        ]:
+            for prefix in ["min_", "max_", "target_"]:
+                param = prefix + attribute
+                if param in kwargs:
+                    params[param] = kwargs[param]
+        songList = self.sp.recommendations(
+            **params
+        )
         recommendations = []
         for song in songList['tracks']:
-             recommendations.append(Song(song['name'], song['album']['name'], song['artists'], song['id'], song['uri']))
+            recommendations.append(Song(song['name'], song['album']['name'], song['artists'], song['id'], song['uri']))
         return recommendations
 
     def add_song_to_queue(self, id, device_id=None):
@@ -128,4 +160,15 @@ class SpotifyClient(object):
     def add_song_list_to_queue(self, id_list, device_id=None):
         for song in id_list:
             self.add_song_to_queue(song, device_id)
-    
+
+    def get_recs_and_add_to_queue(self,seed_artists = None, seed_genres  = None, seed_tracks = None, limit = 20, country = None, **kwargs):
+        songlist = self.get_song_recommendations(seed_artists = seed_artists,
+                                                 seed_genres  = seed_genres,
+                                                 seed_tracks = seed_tracks,
+                                                 limit = 20,
+                                                 country = None,
+                                                 **kwargs)
+        song_id_list = []
+        for songInfo in songlist:
+            song_id_list.append(songInfo.song_id)
+        self.add_song_list_to_queue(id_list=song_id_list)
