@@ -172,3 +172,16 @@ class SpotifyClient(object):
         for songInfo in songlist:
             song_id_list.append(songInfo.song_id)
         self.add_song_list_to_queue(id_list=song_id_list)
+
+    def next(self, device_id = None):
+        self.sp.next_track(device_id)
+
+    def pause(self, device_id = None):
+        self.sp.pause_playback(device_id)
+
+    def previous(self, device_id = None):
+        self.sp.previous_track(device_id)
+
+    def currently_playing(self, market = None, additional_types = None):
+        return self.sp.currently_playing(market = market, additional_types = additional_types)
+

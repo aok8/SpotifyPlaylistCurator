@@ -11,5 +11,6 @@ def run():
     USERNAME = data["spotify"]["username"]
     client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, USERNAME)
 
+
 if __name__ == '__main__':
     run()
