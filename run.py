@@ -16,7 +16,7 @@ def run():
     USERNAME = data["spotify"]["username"]
     client = SpotifyClient(CLIENT_ID, CLIENT_SECRET, USERNAME)
     commands = {
-        'search_song':'search_song',
+        'search_song': 'search_song',
         'view_song': 'view_song',
         'get_playlists': 'get_playlists',
         'view_playlist': 'view_playlist',
@@ -34,6 +34,8 @@ def run():
         'view_song_recs',
         'quit'
     ])
+
+    # Need to add flow for inputing songs and getting recommendations as well as overall return features.
     while 1:
         text = prompt('Input Spotify Command: ', completer=spotify_completer)
         if(text=='quit'):
